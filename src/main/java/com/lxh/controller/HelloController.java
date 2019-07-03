@@ -1,7 +1,10 @@
 package com.lxh.controller;
 
+import com.lxh.config.TestConfig;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
 
 /**
  * @author 刘晓禾
@@ -13,9 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HelloController {
 
+    @Resource
+    private TestConfig testConfig;
 
     @RequestMapping("/hello")
     public String hello(){
-        return "hello";
+        return testConfig.getValue();
     }
 }
