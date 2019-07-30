@@ -1,9 +1,7 @@
 package com.lxh.utils;
 
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 import org.apache.tomcat.util.codec.binary.Base64;
-import org.springframework.boot.system.SystemProperties;
 
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
@@ -139,11 +137,15 @@ public class RSAUtils {
         PrivateKey privateKey = getPrivateKeyFromString(map.get("privateKey").toString());
 
         byte[] bytes = signByPrivateKey(requestDate.getBytes(), privateKey);
-        System.out.println("加密后的签名："+new String(bytes));
+        //用Base64再次加密使用了可以UTF-8字符集
+        byte[] signByte = Base64.encodeBase64(bytes);
+        System.out.println("加密后的签名："+new String(signByte));
 
         //3、使用公钥验签
         PublicKey publicKey = getPulbicKeyFromString(map.get("publicKey").toString());
-        boolean verfity = verfity(requestDate.getBytes(), bytes,publicKey);
+        //Base64解密签名
+        byte[] sign = Base64.decodeBase64(signByte);
+        boolean verfity = verfity(requestDate.getBytes(), sign,publicKey);
         System.out.println("验签结果"+verfity);
 
     }
